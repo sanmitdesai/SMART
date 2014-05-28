@@ -1,6 +1,12 @@
+import java.sql.Timestamp;
+
 
 public class Test {
-public static void main(String[] args) {
-	System.out.println("My first sysout");
-}
+	static void timeStamp(){
+		java.util.Date date= new java.util.Date();
+		System.out.println(new Timestamp(date.getTime()));
+	}
+	public static void main(String[] args) {
+		timeStamp();
+	}
 }
