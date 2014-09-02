@@ -7,13 +7,15 @@ import java.util.List;
 
 import edu.SMART.ReadWordList.ReadCVS;
 import edu.SMART.Tokenizer.Tokenizer;
+import edu.SMART.mongoDB.ReadFromMongo;
+import edu.SMART.stemmer.Cleaning;
 
 public class SentimentAnalyzer {
 
 	/***************************
 	 * wordList created from a given csv file with negative and positive sentiment
 	 */
-	public HashMap<String, ArrayList<Double>> wordList = new HashMap<>();
+	public HashMap<String, Integer> wordList = new HashMap<>();
 
 	/******************************
 	 * initialize wordList
@@ -22,62 +24,36 @@ public class SentimentAnalyzer {
 	public SentimentAnalyzer(String csvFile) {
 
 		ReadCVS readCSVObject = new ReadCVS();
-		wordList = readCSVObject.wordListGenerator(csvFile);
+		wordList = readCSVObject.wordListGeneratorAFINN(csvFile);
 	}
 	
-	/*********************************
-	 * Given a list return total of all elements inside the list
-	 * @param list
-	 * @return
-	 */
-	
-	public double sum(List<Double> list){
-	      if(list==null || list.size()<1)
-	        return 0.0;
+	/*public void analyzer(String tweet){
+		System.out.println(tweet);
+	}*/
+	public int analyzer(String input){
 
-	      Double sum = 0.0;
-	      for(Double i: list)
-	        sum = sum+i;
+		int output=0;
+		Cleaning objCleaning = new Cleaning();
+		input = objCleaning.removeRT(input);
+		List<String> tokenizeInput = Tokenizer.Tokenize(input);
+		for (int i = 0; i < tokenizeInput.size(); i++) {
+			String log = tokenizeInput.get(i);
+			log = objCleaning.removeHashTag(log);
+			if(wordList.containsKey(log)){
+				System.out.print(log+"="+wordList.get(log)+" ");
+				output+=wordList.get(log);
+				//System.out.println(log+affinWordList.get(log));
+			}
+//			System.out.println();
 
-	      return sum;
-	    }
-
-	/****************************
-	 * get array from a given string with separated words
-	 * @param line
-	 * @return
-	 */
-	public ArrayList<String> analyzeTweet(String line){
-
-		return Tokenizer.Tokenize(line);
+		}
+		return output;
 	}
-
-	public void calculateSentiment(ArrayList<String> line){
-		ArrayList<Double> positiveList = new ArrayList<>();
-		ArrayList<Double> negativeList = new ArrayList<>();
-		
-		for(String word : line){
-			if(wordList.containsKey(word)){
-				ArrayList<Double> temp = wordList.get(word);
-				positiveList.add(temp.get(0));
-				negativeList.add(temp.get(1));
-			}//if
-			else{
-				positiveList.add(0.0);
-				negativeList.add(0.0);
-			}//else
-		}//for
-		
-		double positiveTotal = this.sum(positiveList);
-		double negativeTotal = this.sum(negativeList);
-		
-		
-		
-	}
-
 	public static void main(String[] args) {
-		SentimentAnalyzer obj = new SentimentAnalyzer("wordlist/twitter_sentiment_list.csv");
+//		SentimentAnalyzer obj = new SentimentAnalyzer("wordlist/twitter_sentiment_list.csv");
 		//		System.out.println(obj.wordList);
+		ReadFromMongo objFromMongo = new ReadFromMongo();
+		objFromMongo.readMongoSentiAnalysis("test", "ukraine_v1", 21 ,50, "wordlist/SMART.csv");
 	}
 
 }
