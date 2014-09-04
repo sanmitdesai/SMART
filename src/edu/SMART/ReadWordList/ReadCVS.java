@@ -107,6 +107,7 @@ public class ReadCVS {
 			while ((line = br.readLine()) != null) {
 	 
 				// use comma as separator
+//				System.out.println(line);
 				String[] sentiWordList = line.split(cvsSplitBy);
 				sentiWordListMap.put(sentiWordList[0].toUpperCase(), Integer.parseInt(sentiWordList[1]));
 	 

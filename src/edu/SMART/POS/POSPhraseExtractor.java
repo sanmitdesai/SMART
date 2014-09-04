@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.SMART.stemmer.Cleaning;
 import edu.SMART.stemmer.Stemmer;
 import edu.SMART.writeFile.SMARTFileWriter;
 import edu.stanford.nlp.ling.HasWord;
@@ -13,6 +14,11 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class POSPhraseExtractor {
 	public HashMap<String, Integer> biGrams = new HashMap<String, Integer>();
+	/***************
+	 * 
+	 * @param inputFileName
+	 * @param outputFileName
+	 */
 	private POSPhraseExtractor(String inputFileName, String outputFileName) {
 		MaxentTagger tagger = new MaxentTagger("lib\\models\\english-caseless-left3words-distsim.tagger");
 		List<List<HasWord>> sentences;
@@ -29,12 +35,16 @@ public class POSPhraseExtractor {
 		SMARTFileWriter fileWrite = new SMARTFileWriter();
 		fileWrite.writeHashMapToCSV(this.biGrams, outputFileName);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
 	
-	
+	/*************************+
+	 * checks for bigram combinations in a sentence provided as a string array
+	 * @param input
+	 * @return
+	 */
 	public String[] findBigrams(String[] input){
 		// JJ + JJ + not NN or NNS
 	if(input[0].endsWith("JJ")&&input[1].endsWith("JJ")&&!(input[2].endsWith("NN")||input[2].endsWith("NNS"))){
@@ -62,29 +72,30 @@ public class POSPhraseExtractor {
 	}
 	}
 	
-	public String cleaning(String input){
-//		input=input.toLowerCase();
-		if(input.startsWith("#")){
-//			System.out.println(input);
-			input = input.substring(1);
-//			System.out.println(input);
-		}
-		return input;
-	}
 	
+	/***************
+	 * removes POS tags from a sentence
+	 * @param input
+	 * @return
+	 */
 	public String removeTags(String input){
 		return input.substring(0, input.lastIndexOf('/'));
 	}
 	
-	public void iterateWords(List<TaggedWord> tSentence){
+	/**********************
+	 * given a sentence iterate through it word by word
+	 * @param tokenizeInput
+	 */
+	public void iterateWords(List<TaggedWord> tokenizeInput){
+		Cleaning objCleaning = new Cleaning();
 //		Stemmer objStemmer = new Stemmer();
-		for(int i=0;i<tSentence.size();i++){
-			if(i+2>=tSentence.size()){
+		for(int i=0;i<tokenizeInput.size();i++){
+			if(i+2>=tokenizeInput.size()){
 				break;
 			}
 			else{
 //				System.out.print(tSentence.get(i)+","+tSentence.get(i+1)+" ");
-				String[] output = {this.cleaning(tSentence.get(i).toString()),this.cleaning(tSentence.get(i+1).toString()),this.cleaning(tSentence.get(i+2).toString())};
+				String[] output = {objCleaning.removeHashTag(tokenizeInput.get(i).toString()),objCleaning.removeHashTag(tokenizeInput.get(i+1).toString()),objCleaning.removeHashTag(tokenizeInput.get(i+2).toString())};
 				if(this.findBigrams(output)!=null){
 					
 //					String key = objStemmer.callStemmer(this.removeTags(output[0]))+" "+objStemmer.callStemmer(this.removeTags(output[1]).toLowerCase());

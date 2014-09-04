@@ -10,6 +10,13 @@ import com.mongodb.MongoClient;
 import edu.SMART.sentimentAnalyzer.SentimentAnalyzer;
 
 public class ReadFromMongo {
+	/****************
+	 * read from mongoDB and post each tweet
+	 * @param dbName
+	 * @param collectionNameSrc
+	 * @param startAt
+	 * @param batchSize
+	 */
 	public void readMongo(String dbName,String collectionNameSrc,int startAt, int batchSize){
 		try{   
 			// To connect to mongodb server
@@ -47,6 +54,14 @@ public class ReadFromMongo {
 		}
 	}
 	
+	/********************
+	 * read tweets from mongoDB and send them for sentiment analysis
+	 * @param dbName
+	 * @param collectionNameSrc
+	 * @param startAt
+	 * @param batchSize
+	 * @param csvFile
+	 */
 	public void readMongoSentiAnalysis(String dbName,String collectionNameSrc,int startAt, int batchSize, String csvFile){
 		try{ 
 			SentimentAnalyzer objSentimentAnalyzer = new SentimentAnalyzer(csvFile);
