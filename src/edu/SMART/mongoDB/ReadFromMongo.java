@@ -50,7 +50,7 @@ public class ReadFromMongo {
 //					// remove RT symbol
 //					input = objCleaning.removeRTFromTweet(input);
 					
-					System.out.println(temp);
+					System.out.println(temp.get("text"));
 					
 					count++;
 				}
@@ -105,11 +105,13 @@ public class ReadFromMongo {
 					System.out.println(tweet+">>"+sentiScore);
 					
 					
-					BasicDBObject update = new BasicDBObject();
-					BasicDBObject where = new BasicDBObject("id",temp.get("id"));
-					update.append("sentiment", sentiScore);
 					
-					System.out.println(coll.update(temp, update));
+					BasicDBObject where = new BasicDBObject("id",temp.get("id"));
+					
+					System.out.print(" "+temp.get("id"));
+					temp.put("sentiment", sentiScore);
+					
+					System.out.println(coll.update(where, temp));
 					
 					count++;
 				}
@@ -127,7 +129,7 @@ public class ReadFromMongo {
 	
 	public static void main(String[] args) {
 		ReadFromMongo obj = new ReadFromMongo();
-		obj.readMongo("test", "ukraine_v2", 0, 0);
-//		obj.readMongoSentiAnalysis("test", "ukraine_v2", 0 ,0, "wordlist/SMART.csv");
+		obj.readMongo("test", "ukraine_v2", 0, 10);
+//		obj.readMongoSentiAnalysis("test", "ukraine_v2", 0 ,10, "wordlist/SMART.csv");
 	}
 }
