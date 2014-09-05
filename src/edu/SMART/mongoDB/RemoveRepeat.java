@@ -67,6 +67,6 @@ public class RemoveRepeat {
 	}
 	public static void main(String[] args) {
 		RemoveRepeat obj = new RemoveRepeat();
-		obj.findRepeats("test","ukraine_no_repeat","ukraine_v1",0,1093931);
+		obj.findRepeats("test","ukraine_no_repeat","ukraine_v2",0,50000);
 	}
 }

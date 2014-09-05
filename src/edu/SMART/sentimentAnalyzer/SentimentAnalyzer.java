@@ -41,7 +41,8 @@ public class SentimentAnalyzer {
 				||log.contains("NEITHER")
 				||log.contains("HARDLY")
 				||log.contains("SCARCELY")
-				||log.contains("BARELY")){
+				||log.contains("BARELY")
+				||log.contains("NOR")){
 			
 			return true;
 		}
@@ -159,7 +160,7 @@ public class SentimentAnalyzer {
 	public static void main(String[] args) {
 
 		ReadFromMongo objFromMongo = new ReadFromMongo();
-		objFromMongo.readMongoSentiAnalysis("test", "ukraine_v1", 21 ,50, "wordlist/SMART.csv");
+		objFromMongo.readMongoSentiAnalysis("test", "ukraine_v1", 0 ,5, "wordlist/SMART.csv");
 //				SentimentAnalyzer obj = new SentimentAnalyzer("wordlist/SMART.csv");
 //				System.out.println(obj.analyzer("@VladimirPutin hey dude... release pussy riot... and i don't like the shit in the ukraine... and some of my best friends are gay, i'm not"));
 				

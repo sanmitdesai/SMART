@@ -1,5 +1,7 @@
 package edu.SMART.mongoDB;
 
+import javax.sql.rowset.serial.SerialArray;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -8,6 +10,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import edu.SMART.sentimentAnalyzer.SentimentAnalyzer;
+import edu.SMART.stemmer.Cleaning;
 
 public class ReadFromMongo {
 	/****************
@@ -38,7 +41,16 @@ public class ReadFromMongo {
 						break;
 					}
 					DBObject temp = cursor.next();
-					System.out.println(temp.get("text"));
+//					String input = temp.get("sentiment").toString();
+					Cleaning objCleaning = new Cleaning();
+					
+					//remove username
+//					input = objCleaning.removeUserNameFromTweet(input);
+//					
+//					// remove RT symbol
+//					input = objCleaning.removeRTFromTweet(input);
+					
+					System.out.println(temp);
 					
 					count++;
 				}
@@ -76,7 +88,7 @@ public class ReadFromMongo {
 			DBCollection coll = db.getCollection(collectionNameSrc);
 
 			BasicDBObject query = new BasicDBObject();
-
+			
 			DBCursor cursor = coll.find(query, null, startAt, 500);
 			int count = 0;
 			try {
@@ -84,9 +96,20 @@ public class ReadFromMongo {
 					if(count>batchSize){
 						break;
 					}
+					
 					DBObject temp = cursor.next();
-//					System.out.println(temp.get("text"));
-					System.out.println(temp.get("text")+" : "+objSentimentAnalyzer.analyzer(""+temp.get("text")));
+
+					String tweet = ""+temp.get("text");
+					int sentiScore = objSentimentAnalyzer.analyzer(tweet);
+					
+					System.out.println(tweet+">>"+sentiScore);
+					
+					
+					BasicDBObject update = new BasicDBObject();
+					BasicDBObject where = new BasicDBObject("id",temp.get("id"));
+					update.append("sentiment", sentiScore);
+					
+					System.out.println(coll.update(temp, update));
 					
 					count++;
 				}
@@ -95,15 +118,16 @@ public class ReadFromMongo {
 				cursor.close();
 
 			}
-			//		        System.out.println("Written to "+fileName + " sucessfully");
+			
 		}catch(Exception e){
 			e.printStackTrace();
-			//		     System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			
 		}
 	}
 	
 	public static void main(String[] args) {
 		ReadFromMongo obj = new ReadFromMongo();
-		obj.readMongo("test", "ukraine_v1", 0, 50000);
+		obj.readMongo("test", "ukraine_v2", 0, 0);
+//		obj.readMongoSentiAnalysis("test", "ukraine_v2", 0 ,0, "wordlist/SMART.csv");
 	}
 }
