@@ -12,11 +12,16 @@ import java.util.Map;
   *
   */
 public class ReadCVS {
+	
+	public static HashMap<String, Integer> map = new HashMap<String, Integer>();
  
   public static void main(String[] args) {
  
 	ReadCVS obj = new ReadCVS();
-	System.out.println(obj.wordListGeneratorAFINN("wordlist/AFINN.csv"));
+	System.out.println();
+	map = obj.wordListGeneratorAFINN("wordlist/emotions.csv");
+	
+	obj.displayMap(obj.wordListGeneratorSMART("wordlist/SMART.csv"));
  
   }
  
@@ -24,12 +29,20 @@ public class ReadCVS {
    * show contents of a HashMap
    * @param hashMap
    */
-  public void displayMap(HashMap<String, ArrayList<Double>> hashMap){
+  public void displayMap(HashMap<String, Integer> hashMap){
 	//loop map
-			for (Map.Entry<String, ArrayList<Double>> entry : hashMap.entrySet()) {
+			for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
 	 
-				System.out.println("Key= " + entry.getKey() + " , value= "
+
+				if(!map.containsKey(entry.getKey())){
+					System.out.println(entry.getKey() + ","
 					+ entry.getValue());
+				}
+				else{
+//					System.out.println("Key= " + entry.getKey() + " , value= "
+//							+ entry.getValue());
+				}
+				
 	 
 			}
   }
@@ -92,6 +105,55 @@ public class ReadCVS {
    * @return
    */
   public HashMap<String, Integer> wordListGeneratorAFINN(String csvFile) {
+	  
+//		String csvFile = "wordlist/twitter_sentiment_list.csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		HashMap<String, Integer> sentiWordListMap = new HashMap<String, Integer>();
+	 
+		try {
+	 
+			
+	 
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+	 
+				// use comma as separator
+//				System.out.println(line);
+				String[] sentiWordList = line.split(cvsSplitBy);
+				sentiWordListMap.put(sentiWordList[0].toUpperCase(), Integer.parseInt(sentiWordList[2]));
+	 
+			}
+	 
+			
+	 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+	 
+//		System.out.println("WordList read and loaded from : "+csvFile);
+		return sentiWordListMap;
+		
+	  }
+  /****************************************************************
+   * reads the file and inserts into a HashMap for score wise word list
+   * @param csvFile
+   * @return
+   */
+  public HashMap<String, Integer> wordListGeneratorSMART(String csvFile) {
 	  
 //		String csvFile = "wordlist/twitter_sentiment_list.csv";
 		BufferedReader br = null;

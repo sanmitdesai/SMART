@@ -41,16 +41,18 @@ public class ReadFromMongo {
 						break;
 					}
 					DBObject temp = cursor.next();
-//					String input = temp.get("sentiment").toString();
+					String input = temp.get("text").toString();
 					Cleaning objCleaning = new Cleaning();
 					
 					//remove username
-//					input = objCleaning.removeUserNameFromTweet(input);
-//					
-//					// remove RT symbol
-//					input = objCleaning.removeRTFromTweet(input);
+					input = objCleaning.removeUserNameFromTweet(input);
 					
-					System.out.println(temp.get("text"));
+					// remove RT symbol
+					input = objCleaning.removeRTFromTweet(input);
+					
+					input= objCleaning.removeUrl(input);
+					
+					System.out.println(input);
 					
 					count++;
 				}
@@ -129,7 +131,7 @@ public class ReadFromMongo {
 	
 	public static void main(String[] args) {
 		ReadFromMongo obj = new ReadFromMongo();
-		obj.readMongo("test", "ukraine_v2", 0, 10);
+		obj.readMongo("test", "ukraine_v3", 0, 500);
 //		obj.readMongoSentiAnalysis("test", "ukraine_v2", 0 ,10, "wordlist/SMART.csv");
 	}
 }
