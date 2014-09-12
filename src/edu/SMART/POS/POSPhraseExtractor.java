@@ -1,14 +1,22 @@
 package edu.SMART.POS;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.jfree.io.IOUtils;
 
 import edu.SMART.stemmer.Cleaning;
 import edu.SMART.stemmer.Stemmer;
 import edu.SMART.writeFile.SMARTFileWriter;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
@@ -22,22 +30,23 @@ public class POSPhraseExtractor {
 	private POSPhraseExtractor(String inputFileName, String outputFileName) {
 		MaxentTagger tagger = new MaxentTagger("lib\\models\\english-caseless-left3words-distsim.tagger");
 		List<List<HasWord>> sentences;
-		try {
-			sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(inputFileName)));
-		
-		for (List<HasWord> sentence : sentences) {
-			List<TaggedWord> tSentence = tagger.tagSentence(sentence);
-			
-			this.iterateWords(tSentence);
-//				      System.out.println(Sentence.listToString(tSentence, false));
-		}//for
-//		System.out.println(obj.biGrams);
-		SMARTFileWriter fileWrite = new SMARTFileWriter();
-		fileWrite.writeHashMapToCSV(this.biGrams, outputFileName);
-		} catch (FileNotFoundException e) {
-			
-			e.printStackTrace();
-		}
+		//			sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(inputFileName)));
+					InputStream is = new ByteArrayInputStream(inputFileName.getBytes());
+					 
+					// read it with BufferedReader
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+					
+					sentences = MaxentTagger.tokenizeText(br);
+		//			System.out.println(sentences);
+				for (List<HasWord> sentence : sentences) {
+					List<TaggedWord> tSentence = tagger.tagSentence(sentence);
+					
+		//			this.iterateWords(tSentence);
+						      System.out.println(this.SentiWordNetTags(tSentence));
+				}//for
+		//		System.out.println(obj.biGrams);
+		//		SMARTFileWriter fileWrite = new SMARTFileWriter();
+		//		fileWrite.writeHashMapToCSV(this.biGrams, outputFileName);
 	}
 	
 	/*************************+
@@ -116,9 +125,45 @@ public class POSPhraseExtractor {
 		}
 //		System.out.println();
 	}
+	
+	public ArrayList<String> SentiWordNetTags(List<TaggedWord> input){
+		String word = null, temp = null;
+		Cleaning objCleaning = new Cleaning();
+		ArrayList<String> output = new ArrayList<String>();
+		for(int i=0;i<input.size();i++){
+			word=input.get(i).toString();
+			temp = word.substring(word.lastIndexOf("/")+1, word.length());
+			if(temp.startsWith("N")){
+//				System.out.println("n");
+				output.add(objCleaning.removeTags(word)+"#n");
+			}
+			else if(temp.startsWith("V")){
+				output.add(objCleaning.removeTags(word)+"#v");
+//				System.out.println("v");
+			}
+			else if(temp.startsWith("R")){
+				output.add(objCleaning.removeTags(word)+"#r");
+//				System.out.println("r");
+			}
+			else if(temp.startsWith("J")){
+				output.add(objCleaning.removeTags(word)+"#a");
+//				System.out.println("a");
+			}
+			else{
+//				output.add(word);
+			}
+			
+			
+		}
+		
+		
+		return output;
+	}
+	
 	public static void main(String[] args) throws Exception {
 
-		POSPhraseExtractor obj = new POSPhraseExtractor("data\\tweetListV1.txt","data\\bigrams.csv");
+		POSPhraseExtractor obj = new POSPhraseExtractor("president Obama is don't planning a horrific air strike in ukraine :)","");
+		
 		
 	}
 }
