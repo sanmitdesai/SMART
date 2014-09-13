@@ -86,7 +86,7 @@ public class EmotionsWordList {
 		return output;
 	}
 
-	public HashMap<String, ArrayList<String>> readCSV(String csvFile) {
+	public HashMap<String, ArrayList<String>> readEmotionWordList(String csvFile) {
 
 		//		String csvFile = "/Users/mkyong/Downloads/GeoIPCountryWhois.csv";
 
@@ -151,10 +151,46 @@ public class EmotionsWordList {
 		    System.out.println(" Value " + mp.get(key));
 		}
 	}
+	public void run(String csvFile) {
+		 
+//		String csvFile = "/Users/mkyong/Downloads/GeoIPCountryWhois.csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+	 
+		try {
+	 
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+	 
+			        // use comma as separator
+//				String[] country = line.split(cvsSplitBy);
+				System.out.println(line);
+				
+	 
+			}
+	 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	 
+//		System.out.println("Done");
+	  }
 	
 	public static void main(String[] args) {
 		EmotionsWordList objEmotionsWordList = new EmotionsWordList();
-		printMap(objEmotionsWordList.readCSV("wordlist/emotions.csv"));
-//		objEmotionsWordList.readCSV("wordlist/emotions.csv");
+//		printMap(objEmotionsWordList.readEmotionWordList("wordlist/emotions.csv"));
+		objEmotionsWordList.run("wordlist\\MergeLists v2.csv");
+		
 	}
 }
