@@ -10,22 +10,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.SMART.basicDSFTasks.PrintAndInitialize;
 import edu.stanford.nlp.util.HashableCoreMap;
 
 public class EmotionsWordList {
-	
-/********************************
- * Initializes an ArrayList of any size with all zero's
- * @param input
- * @return
- */
-	public ArrayList<String> initializeArrayList(ArrayList<String> input, int size){
-		for(int i=0;i<size-1;i++){
-			input.add("0");
-		}
-		return input;
-	}
-
+	public static PrintAndInitialize objAndInitialize = new PrintAndInitialize();
 	/**************************************
 	 * Creates ArrayList for emotions word list
 	 * @param input
@@ -34,13 +23,14 @@ public class EmotionsWordList {
 	public ArrayList<String> makeArrayListEmotions(ArrayList<String> input){
 
 		ArrayList<String> output = new ArrayList<String>();
-		output = this.initializeArrayList(output,11);
+		
+		output = objAndInitialize.initializeArrayList(output,12);
 		String[] temp = input.get(0).split(",");
-		output.set(0, temp[0].toUpperCase());
+		output.set(0, temp[0].toLowerCase());
 
 		for(String line: input){
 			String[] element = line.split(",");
-			if(element[0].toUpperCase().equals(output.get(0))){
+			if(element[0].toLowerCase().equals(output.get(0))){
 
 
 				if(element[1].equals("negative")){
@@ -52,8 +42,10 @@ public class EmotionsWordList {
 						output.set(1, element[2]);
 					}
 					else{
-						if(element[2].contains("1"))
-							System.err.println("Both Positive and negative "+ output.get(0));
+						if(element[2].contains("1")){
+//							System.err.println("Both Positive and negative "+ output.get(0));
+						}
+							
 					}
 
 				}
@@ -162,18 +154,7 @@ public class EmotionsWordList {
 		return output;
 	}
 
-	/**************************
-	 * print all elements for a given HashMap
-	 * @param mp
-	 */
 	
-	public static void printMap(HashMap<String, ArrayList<String>> mp) {
-		Collection<?> keys = mp.keySet();
-		for(Object key: keys){
-		    System.out.print("Key " + key);
-		    System.out.println(" Value " + mp.get(key));
-		}
-	}
 	
 	/*************************************
 	 * Creates ArrayList for SMART word list
@@ -184,9 +165,9 @@ public class EmotionsWordList {
 	public ArrayList<String> makeArrayListSMART(String[] element){
 		ArrayList<String> output = new ArrayList<String>();
 		
-		output = this.initializeArrayList(output,11);
+		output = objAndInitialize.initializeArrayList(output,12);
 		
-		output.set(0, element[0].toUpperCase());
+		output.set(0, element[0].toLowerCase());
 		output.set(1, element[1]);
 		
 		for(int i=2;i<element.length;i++){

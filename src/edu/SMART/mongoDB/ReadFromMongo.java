@@ -102,18 +102,18 @@ public class ReadFromMongo {
 					DBObject temp = cursor.next();
 
 					String tweet = ""+temp.get("text");
-					int sentiScore = objSentimentAnalyzer.analyzer(tweet);
+//					int sentiScore = objSentimentAnalyzer.analyzer(tweet);
 					
-					System.out.println(tweet+">>"+sentiScore);
+//					System.out.println(tweet+">>"+sentiScore);
 					
+					System.out.println(tweet);
 					
+//					BasicDBObject where = new BasicDBObject("id",temp.get("id"));
 					
-					BasicDBObject where = new BasicDBObject("id",temp.get("id"));
+//					System.out.print(" "+temp.get("id"));
+//					temp.put("sentiment", sentiScore);
 					
-					System.out.print(" "+temp.get("id"));
-					temp.put("sentiment", sentiScore);
-					
-					System.out.println(coll.update(where, temp));
+//					System.out.println(coll.update(where, temp));
 					
 					count++;
 				}

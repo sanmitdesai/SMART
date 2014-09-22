@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SentiWordNetDemoCode {
+public class SentiWordWordList {
 
   private Map<String, Double> dictionary;
 
-  public SentiWordNetDemoCode(String pathToSWN) throws IOException {
+  public SentiWordWordList(String pathToSWN){
+	  
     // This is our main dictionary representation
     dictionary = new HashMap<String, Double>();
 
@@ -118,7 +119,12 @@ public class SentiWordNetDemoCode {
       e.printStackTrace();
     } finally {
       if (csv != null) {
-	csv.close();
+	try {
+		csv.close();
+	} catch (IOException e) {
+		
+		e.printStackTrace();
+	}
       }
     }
   }
@@ -127,17 +133,17 @@ public class SentiWordNetDemoCode {
 	  if(dictionary.containsKey(word + "#" + pos))
     return dictionary.get(word + "#" + pos);
 	  else
-		  return 2.0;
+		  return 0.0;
   }
   
-  public static void main(String [] args) throws IOException {
+  public static void main(String [] args){
 //    if(args.length<1) {
 //      System.err.println("Usage: java SentiWordNetDemoCode <pathToSentiWordNetFile>");
 //      return;
 //    }
     
     String pathToSWN = "wordlist\\SentiWordNet_3.0.0_20130122.txt";
-    SentiWordNetDemoCode sentiwordnet = new SentiWordNetDemoCode(pathToSWN);
+    SentiWordWordList sentiwordnet = new SentiWordWordList(pathToSWN);
     
     System.out.println("good#a "+sentiwordnet.extract("good", "a"));
     System.out.println("bad#a "+sentiwordnet.extract("bad", "a"));

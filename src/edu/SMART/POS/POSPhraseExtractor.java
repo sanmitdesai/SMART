@@ -42,6 +42,7 @@ public class POSPhraseExtractor {
 					List<TaggedWord> tSentence = tagger.tagSentence(sentence);
 					
 		//			this.iterateWords(tSentence);
+					System.out.println(tSentence);
 						      System.out.println(this.SentiWordNetTags(tSentence));
 				}//for
 		//		System.out.println(obj.biGrams);
@@ -162,7 +163,7 @@ public class POSPhraseExtractor {
 	
 	public static void main(String[] args) throws Exception {
 
-		POSPhraseExtractor obj = new POSPhraseExtractor("president Obama is don't planning a horrific air strike in ukraine :)","");
+		POSPhraseExtractor obj = new POSPhraseExtractor("obama is a pussy and a quacker","");
 		
 		
 	}
