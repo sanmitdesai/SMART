@@ -35,11 +35,11 @@ public class EmotionAnalyzer {
 	}
 
 	public void analysis(String tweet){
-//		List<List<HasWord>> sentences;
+		//		List<List<HasWord>> sentences;
 
-//		InputStream is = new ByteArrayInputStream(tweet.getBytes());
-//		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-//		sentences = MaxentTagger.tokenizeText(br);
+		//		InputStream is = new ByteArrayInputStream(tweet.getBytes());
+		//		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		//		sentences = MaxentTagger.tokenizeText(br);
 		DocumentPreprocessor sentences = new DocumentPreprocessor(new StringReader(tweet));
 
 		//					System.out.println(sentences);
@@ -54,7 +54,35 @@ public class EmotionAnalyzer {
 		}//for
 	}
 
+	public static ArrayList<String> setWithSentiScore(ArrayList<String> input, Double sentiScore){
+		Double temp=0.0;
+		ArrayList<String> output = new ArrayList<String>();
+		int size = input.size();
+		output.add(input.get(0));
+		String element;
+		for(int i=1;i<size-1;i++){
+			element = input.get(i);
+			if(!element.equals(""+0)){
+				if(element.contains("-")){
+					temp = Double.parseDouble(element)*sentiScore;
+//					System.out.print(input.get(i)+" ");
+					output.add("-"+temp);
+				}
+				else{
+					temp = Double.parseDouble(element)*sentiScore;
+//					System.out.print(input.get(i)+" ");
+					output.add(""+Math.abs(temp));
+				}
+			}
+			else{
+				output.add(element);
+			}
 
+		}
+
+		output.add(input.get(size-1));
+		return output;
+	}
 
 	public ArrayList<ArrayList<String>> wordMatch(List<TaggedWord> tSentence){
 		String currentWord,currentTag;
@@ -67,9 +95,9 @@ public class EmotionAnalyzer {
 			if(emotionsWordList.containsKey(currentWord)){
 				//				System.out.println(word+"="+sentiwordnet.extract(currentWord, sentiTagger.returnSentiWordNetTags(word.tag()))
 				//						+" == "+emotionsWordList.get(currentWord));
-				
+
 				tempScore = sentiwordnet.extract(currentWord, sentiTagger.returnSentiWordNetTags(currentTag)); 
-				
+
 				ArrayList<String> temp = new ArrayList<String>();
 				temp = emotionsWordList.get(currentWord);
 				temp.set(10, currentTag);
@@ -77,10 +105,10 @@ public class EmotionAnalyzer {
 					sentence.add(temp);
 				}
 				else{
-					System.out.println("found in senti "+currentWord);
-					sentence.add(temp);
+//					System.out.println("found in senti "+currentWord);
+					sentence.add(setWithSentiScore(temp,tempScore));
 				}
-				
+
 			}
 			else
 			{
@@ -99,10 +127,10 @@ public class EmotionAnalyzer {
 	public ArrayList<String> combineEmotions(ArrayList<ArrayList<String>> sentence){
 		ArrayList<String> output = new ArrayList<String>();
 		output = objAndInitialize.initializeArrayList(output, 10);
-		int tempScore;
+		Double tempScore;
 		for(ArrayList<String> word : sentence){
 			for(int i=0;i<9;i++){
-				tempScore = Integer.parseInt(word.get(i+1))+Integer.parseInt(output.get(i));
+				tempScore = Double.parseDouble(word.get(i+1))+Double.parseDouble(output.get(i));
 				output.set(i,""+tempScore);
 			}
 
