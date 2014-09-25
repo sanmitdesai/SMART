@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import edu.SMART.basicDSFTasks.PrintAndInitialize;
 import edu.stanford.nlp.util.HashableCoreMap;
@@ -261,10 +262,14 @@ return output;
 	public HashMap<String, ArrayList<String>> makeWordList (String emotionsFilePath, String SMARTFilePath){
 		HashMap<String, ArrayList<String>> output = new HashMap<String, ArrayList<String>>();
 		
+		long startTime = System.nanoTime();
 		output=this.readEmotionWordList(emotionsFilePath);
-		
+		long stopTime = System.nanoTime();
+		System.err.println("Word list loaded Emotions "+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec");
+		startTime = System.nanoTime();
 		output = this.readSMARTWordList(SMARTFilePath, output);
-		
+		stopTime = System.nanoTime();
+		System.err.println("Word list loaded Emotions2 "+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec");
 		return output;
 	}
 	
