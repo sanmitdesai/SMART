@@ -21,7 +21,7 @@ public class EmotionAnalyzer {
 	public static SentiWordNetTags sentiTagger = new SentiWordNetTags();
 	public static SentiWordWordList sentiwordnet = new SentiWordWordList("wordlist\\SentiWordNet_3.0.0_20130122.txt");
 	public static EmotionsWordList objEmotionsWordList = new EmotionsWordList();
-	public static HashMap<String, ArrayList<String>> emotionsWordList = objEmotionsWordList.makeWordList("wordlist/emotions.csv", "wordlist\\emotions2.csv");
+	public static HashMap<String, ArrayList<String>> emotionsWordList = objEmotionsWordList.makeWordList("wordlist\\emotions.csv", "wordlist\\emotions2.csv");
 	public static PrintAndInitialize objAndInitialize = new PrintAndInitialize();
 
 	/**************************
@@ -82,6 +82,7 @@ public class EmotionAnalyzer {
 			currLine = this.unigram(tSentence);
 			currLine = this.bigram(currLine);
 			currLine = this.valenceShifter(currLine);
+			currLine = this.intensifiers(currLine);
 			objAndInitialize.displayNestedArraylist(currLine);
 			output = this.combineEmotions(currLine);
 
@@ -120,7 +121,7 @@ public class EmotionAnalyzer {
 		else if(isBetween(input, 0.6, 0.8)) {
 			return 4;
 		}
-		else if(isBetween(input, 0.8, 1.0)) {
+		else if(input>0.8) {
 			return 5;
 		}
 		else if(isBetween(input, -0.2, 0.0)) {
@@ -135,7 +136,7 @@ public class EmotionAnalyzer {
 		else if(isBetween(input, -0.8, -0.6)) {
 			return -4;
 		}
-		else if(isBetween(input, -1.1, -0.8)) {
+		else if(input<-0.8) {
 			return -5;
 		}
 		else {
@@ -245,7 +246,43 @@ public class EmotionAnalyzer {
 
 		return output;
 	}
-	
+	/**************************
+	 * returns true if an intensifier is encountered
+	 * @param log
+	 * @return
+	 */
+	public static boolean intensityCheck(String log){
+		if(log.contains("so")
+				||log.contains("too")
+				||log.contains("very")
+				||log.contains("really")
+				||log.contains("bloody")
+				||log.contains("dreadfully")
+				||log.contains("extremely")
+				||log.contains("fucking")
+				||log.contains("hella")
+				||log.contains("most")
+				||log.contains("precious")
+				||log.contains("quite")
+				||log.contains("real")
+				||log.contains("remarkably")
+				||log.contains("terribly")
+				||log.contains("moderately")
+				||log.contains("wicked")
+				||log.contains("bare")
+				||log.contains("rather")
+				||log.contains("somewhat")
+				||log.contains("fully")
+				||log.contains("super")
+				||log.contains("veritable"))
+				{
+			
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	/*********************
 	 * checks for negation in a sentence
 	 * @param log
@@ -276,6 +313,7 @@ public class EmotionAnalyzer {
 				||log.contains("hope")
 				||log.contains("how")
 				||log.contains("lack")
+				||log.contains("isnt")
 				||log.contains("lacking")){
 			
 			return true;
@@ -298,24 +336,36 @@ public class EmotionAnalyzer {
 		for(int i=0;i<input.size();i++){
 			currWordList = input.get(i);
 			currWord=currWordList.get(0);
-//			System.out.println(currWord);
+
+			/**********
+			 * checks for valence shifter
+			 */
 			if(negationCheck(currWord)){
-//				System.out.println(" negation found "+currWord);
+
 				negFlag=!negFlag;
 				i++;
+				
+				if(i<input.size()){
 				currWord = input.get(i).get(0);
 
 				currWordList = input.get(i);
+				}
+				else{
+					negFlag=false;
+				}
 			}
 			
 			if(currWord.equals(".")||currWord.equals(",")||currWord.equals("!")||currWord.equals("?")){
-//				System.out.println("negation removed "+currWord);
+
 				negFlag = false;
 			}
 			
 			if(negFlag && this.containEmotionSentiment(currWordList)){
-//				System.out.println("word found "+currWordList);
-				input.set(i, this.reverseAll(input.get(i)));
+				String temp = currWordList.get(1);
+				currWordList = this.reverseAll(currWordList);
+				currWordList.add(temp);
+				input.set(i, currWordList);
+				
 				negFlag = false;
 			}
 		}
@@ -328,14 +378,14 @@ public class EmotionAnalyzer {
 	 */
 	public ArrayList<String> reverseAll(ArrayList<String> arrayList) {
 		String currWord = arrayList.get(1);
-//		System.out.println(currWord);
+
 		if(currWord.startsWith("-")){
 			arrayList.set(1,currWord.substring(1));
 		}
 		else if(!currWord.equals("0")){
-//			System.out.println(currWord);
+
 			arrayList.set(1, "-"+currWord);
-//			System.out.println(arrayList.get(1));
+
 		}
 		 ArrayList<String> flagArrayList = new ArrayList<String>();
 		 flagArrayList = objAndInitialize.initializeArrayList(flagArrayList, 11);
@@ -347,7 +397,7 @@ public class EmotionAnalyzer {
 					arrayList.set(i, "0");
 					arrayList.set(i+4, currWord);
 					flagArrayList.set(i+4, currWord);
-//					System.out.println(arrayList.get(i)+arrayList.get(i+4));
+
 				}
 			}//if 2-4
 			else{
@@ -358,8 +408,141 @@ public class EmotionAnalyzer {
 			}//else 5-9
 			
 		}//for
-//		System.out.println(arrayList);
+
 		return arrayList;
+	}
+	
+	/******************************
+	 * if an intensifier is encountered the following relevent word is then given a value of higher intensity than its own
+	 * @param input
+	 * @return
+	 */
+	public ArrayList<ArrayList<String>> intensifiers(ArrayList<ArrayList<String>> input){
+		boolean intFlag = false;
+		String currWord;
+		ArrayList<String> currWordList;
+		for(int i=0;i<input.size();i++){
+			currWordList = input.get(i);
+			currWord=currWordList.get(0);
+
+			/**********
+			 * checks for intensity
+			 */
+			if(intensityCheck(currWord)){
+
+				intFlag=!intFlag;
+				i++;
+				if(i<input.size()){
+					currWord = input.get(i).get(0);
+
+					currWordList = input.get(i);
+					}
+					else{
+						intFlag=false;
+					}
+			}
+			
+			if(currWord.equals(".")||currWord.equals(",")||currWord.equals("!")||currWord.equals("?")){
+
+				intFlag = false;
+			}
+			
+			if(intFlag && this.containEmotionSentiment(currWordList)){
+				if(currWordList.size()>11){
+
+					currWordList.remove(currWordList.size()-1);
+
+					input.set(i, this.objectiveIntensifyAll(input.get(i)));
+					
+					intFlag = false;
+				}
+				else{
+					input.set(i, this.intensifyAll(input.get(i)));
+					intFlag = false;
+				}
+				
+			}
+		}
+		return input;
+	}
+	
+	/************************************
+	 * deals with condition where negation is followed by an intensifier
+	 * reduces the intensity of the word by one
+	 * example if sentiment score was 3 it will become 2
+	 * @param arrayList
+	 * @return
+	 */
+	public ArrayList<String> objectiveIntensifyAll(ArrayList<String> arrayList) {
+		int score = Integer.parseInt(arrayList.get(1));
+		if(score<0){
+			if((score+1)>=0){
+
+				return this.setValuesToAll(arrayList, -1);
+			}
+			else{
+
+				return this.setValuesToAll(arrayList, score+1);
+			}
+		}//negative
+		else{
+			if((score-1)<=0){
+
+				return this.setValuesToAll(arrayList, 1);
+			}
+			else{
+
+				return this.setValuesToAll(arrayList, score-1);
+			}
+		}//zero and positive
+		
+	}
+	/*************************
+	 * adds 1 to the given word to intensify its sentiment and emotion score
+	 * @param arrayList
+	 * @return
+	 */
+	public ArrayList<String> intensifyAll(ArrayList<String> arrayList) {
+		int score = Integer.parseInt(arrayList.get(1));
+		if(score<0){
+			if((score-1)<-5){
+
+				return this.setValuesToAll(arrayList, -5);
+			}
+			else{
+
+				return this.setValuesToAll(arrayList, score-1);
+			}
+		}//negative
+		else{
+			if((score+1)>5){
+
+				return this.setValuesToAll(arrayList, 5);
+			}
+			else{
+
+				return this.setValuesToAll(arrayList, score+1);
+			}
+		}//zero and positive
+		
+	}
+	
+	/*****************************
+	 * given a integer score this function sets the value to all elements of the arrayList
+	 * except first and the last element, the elements 2-9 will contain absolute value of the score
+	 * @param input
+	 * @param score
+	 * @return
+	 */
+	public ArrayList<String> setValuesToAll(ArrayList<String> input, int score){
+		input.set(1, ""+score);
+		String scoreString = ""+Math.abs(score);
+		for(int i=2;i<input.size()-1;i++){
+			if(!input.get(i).equals("0"))
+			input.set(i, scoreString);
+		}
+		
+		return input;
 	}
 	
 	/*******************
@@ -390,6 +573,9 @@ public class EmotionAnalyzer {
 	public static void main(String[] args) throws IOException {
 
 		EmotionAnalyzer obj = new EmotionAnalyzer();
-		System.out.println(obj.analysis("tense standoff between obama and the senate isn't good"));
+//		String input = "tense standoff between obama and the senate isn't good";
+		String input = "tense standoff between obama and the senate isnt very good";
+//		String input = "tense standoff between obama and the senate very bad";
+		System.out.println(obj.analysis(input));
 	}
 }

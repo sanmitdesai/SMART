@@ -117,7 +117,7 @@ public class SentiWordWordList {
 				dictionary.put(word, score);
 			}
 			long stopTime = System.nanoTime();
-			System.err.println("Word list loaded sentiwordnet "+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec");
+			System.err.println("Loading Word list from "+pathToSWN+" ... Done ["+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec].");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

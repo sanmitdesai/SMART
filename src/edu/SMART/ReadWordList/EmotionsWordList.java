@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+//import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+//import java.util.Iterator;
+//import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import edu.SMART.basicDSFTasks.PrintAndInitialize;
-import edu.stanford.nlp.util.HashableCoreMap;
+//import edu.stanford.nlp.util.HashableCoreMap;
 
 public class EmotionsWordList {
 	public static PrintAndInitialize objAndInitialize = new PrintAndInitialize();
@@ -101,7 +101,7 @@ public class EmotionsWordList {
 		HashMap<String, ArrayList<String>> output = new HashMap<String, ArrayList<String>>();
 		BufferedReader br = null;
 		String line = "";
-		String cvsSplitBy = ",";
+//		String cvsSplitBy = ",";
 		int counter = 0;
 		ArrayList<String> lines = new ArrayList<String>();
 		try {
@@ -265,11 +265,11 @@ return output;
 		long startTime = System.nanoTime();
 		output=this.readEmotionWordList(emotionsFilePath);
 		long stopTime = System.nanoTime();
-		System.err.println("Word list loaded Emotions "+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec");
+		System.err.println("Loading Word list from " +emotionsFilePath+" ... Done ["+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec].");
 		startTime = System.nanoTime();
 		output = this.readSMARTWordList(SMARTFilePath, output);
 		stopTime = System.nanoTime();
-		System.err.println("Word list loaded Emotions2 "+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec");
+		System.err.println("Loading Word list from "+SMARTFilePath+" ... Done ["+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec].");
 		return output;
 	}
 	
