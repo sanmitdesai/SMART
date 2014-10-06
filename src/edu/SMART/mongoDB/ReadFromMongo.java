@@ -102,7 +102,7 @@ public class ReadFromMongo {
 					DBObject temp = cursor.next();
 
 					String tweet = ""+temp.get("text");
-//					int sentiScore = objSentimentAnalyzer.analyzer(tweet);
+					int sentiScore = objSentimentAnalyzer.analyzer(tweet);
 					
 //					System.out.println(tweet+">>"+sentiScore);
 					

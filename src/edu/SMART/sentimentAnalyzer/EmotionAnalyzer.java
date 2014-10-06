@@ -574,8 +574,8 @@ public class EmotionAnalyzer {
 
 		EmotionAnalyzer obj = new EmotionAnalyzer();
 //		String input = "tense standoff between obama and the senate isn't good";
-		String input = "tense standoff between obama and the senate isnt very good";
-//		String input = "tense standoff between obama and the senate very bad";
+//		String input = "tense standoff between obama and the senate isnt very good";
+		String input = "tense standoff between obama and the senate is good";
 		System.out.println(obj.analysis(input));
 	}
 }
