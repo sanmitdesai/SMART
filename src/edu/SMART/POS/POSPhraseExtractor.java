@@ -26,11 +26,12 @@ public class POSPhraseExtractor {
 	 * 
 	 * @param inputFileName
 	 * @param outputFileName
+	 * @throws FileNotFoundException 
 	 */
-	private POSPhraseExtractor(String inputFileName, String outputFileName) {
+	private POSPhraseExtractor(String inputFileName, String outputFileName) throws FileNotFoundException {
 		MaxentTagger tagger = new MaxentTagger("lib\\models\\english-caseless-left3words-distsim.tagger");
 		List<List<HasWord>> sentences;
-		//			sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(inputFileName)));
+					sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(inputFileName)));
 					InputStream is = new ByteArrayInputStream(inputFileName.getBytes());
 					 
 					// read it with BufferedReader
@@ -41,13 +42,13 @@ public class POSPhraseExtractor {
 				for (List<HasWord> sentence : sentences) {
 					List<TaggedWord> tSentence = tagger.tagSentence(sentence);
 					
-		//			this.iterateWords(tSentence);
+					this.iterateWords(tSentence);
 					System.out.println(tSentence);
-						      System.out.println(this.SentiWordNetTags(tSentence));
+//						      System.out.println(this.SentiWordNetTags(tSentence));
 				}//for
-		//		System.out.println(obj.biGrams);
-		//		SMARTFileWriter fileWrite = new SMARTFileWriter();
-		//		fileWrite.writeHashMapToCSV(this.biGrams, outputFileName);
+				System.out.println(this.biGrams);
+				SMARTFileWriter fileWrite = new SMARTFileWriter();
+				fileWrite.writeHashMapToCSV(this.biGrams, outputFileName);
 	}
 	
 	/*************************+

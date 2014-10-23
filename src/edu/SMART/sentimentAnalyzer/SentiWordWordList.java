@@ -140,10 +140,10 @@ public class SentiWordWordList {
 	}
 
 	public static void main(String [] args){
-		//    if(args.length<1) {
-		//      System.err.println("Usage: java SentiWordNetDemoCode <pathToSentiWordNetFile>");
-		//      return;
-		//    }
+		    if(args.length<1) {
+		      System.err.println("Usage: java SentiWordNetDemoCode <pathToSentiWordNetFile>");
+		      return;
+		    }
 
 		String pathToSWN = "wordlist\\SentiWordNet_3.0.0_20130122.txt";
 		SentiWordWordList sentiwordnet = new SentiWordWordList(pathToSWN);
