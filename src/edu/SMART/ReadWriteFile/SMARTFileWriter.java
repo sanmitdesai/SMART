@@ -1,4 +1,4 @@
-package edu.SMART.writeFile;
+package edu.SMART.ReadWriteFile;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import java.io.*;

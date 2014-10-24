@@ -12,9 +12,9 @@ import java.util.List;
 
 import org.jfree.io.IOUtils;
 
+import edu.SMART.ReadWriteFile.SMARTFileWriter;
 import edu.SMART.stemmer.Cleaning;
 import edu.SMART.stemmer.Stemmer;
-import edu.SMART.writeFile.SMARTFileWriter;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.TaggedWord;

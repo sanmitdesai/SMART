@@ -27,7 +27,7 @@ public class EmotionAnalyzer {
 	/**************************
 	 * 
 	 */
-	private EmotionAnalyzer(){
+	public EmotionAnalyzer(){
 
 	}
 	/****************************
@@ -83,7 +83,7 @@ public class EmotionAnalyzer {
 			currLine = this.bigram(currLine);
 			currLine = this.valenceShifter(currLine);
 			currLine = this.intensifiers(currLine);
-			objAndInitialize.displayNestedArraylist(currLine);
+//			objAndInitialize.displayNestedArraylist(currLine);			
 			output = this.combineEmotions(currLine);
 
 		}//for
@@ -231,12 +231,22 @@ public class EmotionAnalyzer {
 		for(ArrayList<String> word : sentence){
 			for(int i=0;i<9;i++){
 				if(i==0){
-					tempScore = Integer.parseInt(word.get(i+1))+Integer.parseInt(output.get(i));
+					String sentiScore = word.get(i+1);
+					if(sentiScore.contains("--")){
+						sentiScore = sentiScore.substring(2);
+//						System.out.println("here");
+					}
+					tempScore = Integer.parseInt(sentiScore)+Integer.parseInt(output.get(i));
 					output.set(i,""+tempScore);
 				}
 				
 				else{
-					tempScore = Math.abs(Integer.parseInt(word.get(i+1)))+Math.abs(Integer.parseInt(output.get(i)));
+					String sentiScore = word.get(i+1);
+					if(sentiScore.contains("--")){
+						sentiScore = sentiScore.substring(1);
+//						System.out.println("here");
+					}
+					tempScore = Math.abs(Integer.parseInt(sentiScore))+Math.abs(Integer.parseInt(output.get(i)));
 					output.set(i,""+tempScore);
 				}
 				
@@ -503,7 +513,13 @@ public class EmotionAnalyzer {
 	 * @return
 	 */
 	public ArrayList<String> intensifyAll(ArrayList<String> arrayList) {
-		int score = Integer.parseInt(arrayList.get(1));
+		String sentiScore = arrayList.get(1);
+		if(sentiScore.contains("--")){
+			sentiScore = sentiScore.substring(1);
+//			System.out.println("here");
+		}
+		int score = Integer.parseInt(sentiScore);
+		
 		if(score<0){
 			if((score-1)<-5){
 
@@ -575,7 +591,8 @@ public class EmotionAnalyzer {
 		EmotionAnalyzer obj = new EmotionAnalyzer();
 //		String input = "tense standoff between obama and the senate isn't good";
 //		String input = "tense standoff between obama and the senate isnt very good";
-		String input = "tense standoff between obama and the senate is very good";
+//		String input = "tense standoff between obama and the senate is very good";
+		String input = "Ukraine continues to spiral out of control. Meanwhile Obama &amp; Kerry offer the usual empty rhetoric &amp; condemnations http:…";
 		System.out.println(obj.analysis(input));
 	}
 }

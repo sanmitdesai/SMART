@@ -1,14 +1,10 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +21,12 @@ public class NetClientGet {
 
 	private static final Map JSON_DATA = null;
 
+	/*****************
+	 * Given a Tweet in the parameter data
+	 * program returns all the relevant annotations in a HashSet
+	 * @param data
+	 * @return
+	 */
 	public HashSet<String> querySpotLight(String data){
 		try {
 
@@ -79,6 +81,11 @@ public class NetClientGet {
 
 	}
 
+	/********************************
+	 * reads JSON reply from SpotLight and returns a HashSet of entries
+	 * @param input
+	 * @return
+	 */
 	public HashSet<String> readJSON(String input){
 		HashSet<String> output = new HashSet<String>();
 		JSONParser parser=new JSONParser();
@@ -116,6 +123,11 @@ public class NetClientGet {
 
 	}
 
+	/**************************
+	 * Checks if a given entity is relevant
+	 * @param entity
+	 * @return
+	 */
 
 	public boolean checkForRelevance(JSONObject entity) {
 
@@ -183,6 +195,10 @@ public class NetClientGet {
 
 	}
 
+	/*******************************
+	 * 
+	 * @param data
+	 */
 	public void multipleRequests(String data){
 		//		String data = "President Obama called Wednesday on Congress to extend a tax break for students included in last year's economic stimulus package, arguing that the policy provides more generous assistance.";//"President%20Obama%20called%20Wednesday%20on%20Congress%20to%20extend%20a%20tax%20break%20for%20students%20included%20in%20last%20year%27s%20economic%20stimulus%20package,%20arguing%20that%20the%20policy%20provides%20more%20generous%20assistance.";
 		long startTime = System.nanoTime();
@@ -191,13 +207,18 @@ public class NetClientGet {
 		System.err.println(" ...["+TimeUnit.NANOSECONDS.toSeconds(stopTime - startTime)+" sec].");
 	}
 
+	/*************************************
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		NetClientGet obj = new NetClientGet();
 		Cleaning objCleaning = new Cleaning();
 
-		//		System.out.println(obj.readJSON("jsonexample.txt"));
+
 		ArrayList<String> tweets = new ArrayList<String>();
+
 		tweets.add("In Prague, and I heard aweful need about people being killed with Snipers from the buildings in Ukraine #ukraineprotests");
 		tweets.add("Praying for Ukraine...");
 		tweets.add("(Marine Corps Times) Obama threatens consequences for Ukraine violence: President Obama on Wednesday... http://t.co/d2KHTKcBwP #Military");
