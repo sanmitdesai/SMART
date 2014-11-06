@@ -1,8 +1,12 @@
 package edu.SMART.ReadWriteFile;
+//import SummaryPrep;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import edu.SMART.Main.NetClientGet;
+import edu.SMART.Main.SummaryPrep;
 import edu.SMART.sentimentAnalyzer.EmotionAnalyzer;
 import edu.SMART.stemmer.Cleaning;
 
@@ -12,7 +16,8 @@ public class ReadFile {
 		 BufferedReader br = null;
 		 Cleaning objCleaning = new Cleaning();
 		 EmotionAnalyzer objEmotionAnalyzer = new EmotionAnalyzer();
-		 
+		 SummaryPrep objSummaryPrep = new SummaryPrep();
+		 NetClientGet objNetClientGet = new NetClientGet();
 		 
 			try {
 	 
@@ -22,8 +27,10 @@ public class ReadFile {
 				int count =0;
 				
 //				while ((sCurrentLine = br.readLine()) != null) {
-				while (count<200) {
+				while (count<3) {
+					long startTime = System.nanoTime();
 					input = br.readLine();
+					
 					//remove username
 					input = objCleaning.removeUserNameFromTweet(input);
 
@@ -35,9 +42,12 @@ public class ReadFile {
 					
 					input = objCleaning.removeUrl(input);
 					
-					System.out.println(input);
-					System.out.println(objEmotionAnalyzer.analysis(input));
-					
+
+					System.out.print(objSummaryPrep.getEmotionsPriority(objEmotionAnalyzer.analysis(input),10,-10)+"\n");
+//					System.out.print(objSummaryPrep.returnAnnotations(objNetClientGet.querySpotLight(input))+"\n");
+					long endTime = System.nanoTime();
+					long duration = (endTime - startTime)/1000000;
+					System.err.println(duration);
 					count++;
 				}
 	 
@@ -56,7 +66,8 @@ public class ReadFile {
 		public static void main(String[] args) {
 	 
 			ReadFile objReadFile = new ReadFile();
-			objReadFile.read("E:\\Dropbox\\workspace\\SMART\\data\\tweetListV1.txt");
+			objReadFile.read("E:\\Dropbox\\workspace\\SMART\\data\\israel.txt");
+//			objReadFile.read("F:\\isr_out_2.txt");
 	 
 		}
 	

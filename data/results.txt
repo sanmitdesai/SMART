@@ -1,0 +1,10 @@
+Reading POS tagger model from lib\models\english-caseless-left3words-distsim.tagger ... done [1.6 sec].
+Loading Word list from wordlist\SentiWordNet_3.0.0_20130122.txt ... Done [1 sec].
+Loading Word list from wordlist\emotions.csv ... Done [0 sec].
+Loading Word list from wordlist\emotions2.csv ... Done [0 sec].
+Neutral,Fear,Anger,Joy
+93
+3
+Neutral,Joy,Joy,Joy
+5
+Slightly Positive,Trust,Joy,Joy
