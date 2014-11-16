@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jfree.ui.RefineryUtilities;
+
 import edu.SMART.POS.SentiWordNetTags;
 import edu.SMART.ReadWordList.EmotionsWordList;
 import edu.SMART.basicDSFTasks.PrintAndInitialize;
+import edu.SMART.showStats.PieChartDemo1;
 import edu.stanford.nlp.io.EncodingPrintWriter.out;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
@@ -160,22 +163,22 @@ public class EmotionAnalyzer {
 		for(int i=1;i<size-1;i++){
 			element = input.get(i);
 			try{
-			
-			if(!element.equals(""+0)){
-				if(element.contains("-")){
-					temp =Integer.parseInt(element)*extrapolateToFiveScale(sentiScore);
 
-					output.add("-"+temp);
+				if(!element.equals(""+0)){
+					if(element.contains("-")){
+						temp =Integer.parseInt(element)*extrapolateToFiveScale(sentiScore);
+
+						output.add("-"+temp);
+					}
+					else{
+						temp = Integer.parseInt(element)*extrapolateToFiveScale(sentiScore);
+
+						output.add(""+Math.abs(temp));
+					}
 				}
 				else{
-					temp = Integer.parseInt(element)*extrapolateToFiveScale(sentiScore);
-
-					output.add(""+Math.abs(temp));
+					output.add(element);
 				}
-			}
-			else{
-				output.add(element);
-			}
 			}catch(Exception e){
 				output.add("0");
 			}
@@ -235,11 +238,11 @@ public class EmotionAnalyzer {
 		output = objAndInitialize.initializeArrayList(output, 10);
 		int tempScore;
 		for(ArrayList<String> word : sentence){
-//			System.out.println(word);
+			//			System.out.println(word);
 			for(int i=0;i<9;i++){
 				//				System.out.print(word.get(i+1)+",");
 				if(i==0){
-//					System.out.print("here,");
+					//					System.out.print("here,");
 					String sentiScore = word.get(i+1);
 					if(sentiScore.contains("--")){
 						sentiScore = sentiScore.substring(1);
@@ -257,7 +260,7 @@ public class EmotionAnalyzer {
 							//						System.out.println("here");
 						}
 						tempScore = Math.abs(Integer.parseInt(sentiScore))+Math.abs(Integer.parseInt(output.get(i)));
-//						System.out.print(output.get(i)+",");
+						//						System.out.print(output.get(i)+",");
 						output.set(i,""+tempScore);
 					}
 				}
@@ -266,7 +269,7 @@ public class EmotionAnalyzer {
 
 		}
 
-//		System.out.println(">>"+output);
+		//		System.out.println(">>"+output);
 		return output;
 	}
 	/**************************
@@ -606,10 +609,14 @@ public class EmotionAnalyzer {
 	public static void main(String[] args) throws IOException {
 
 		EmotionAnalyzer obj = new EmotionAnalyzer();
-		//		String input = "tense standoff between obama and the senate isn't good";
-		//		String input = "tense standoff between obama and the senate isnt very good";
-		//		String input = "tense standoff between obama and the senate is very good";
-		String input = "Too late now -everyone is there But not too late to boycott the closing ceremony Syria Ukraine Sochi2014";
+				String input = "Tense standoff between obama and the senate isn't good";
+//				String input = "Tense standoff between obama and the senate isnt very good";
+//		String input = "tense standoff between obama and the senate is very good";
+		//		String input = "Too late now -everyone is there But not too late to boycott the closing ceremony Syria Ukraine Sochi2014";
 		System.out.println(obj.analysis(input));
+		PieChartDemo1 demo = new PieChartDemo1("Emotion Pie Chart",obj.analysis(input),input);
+		demo.pack();
+		RefineryUtilities.centerFrameOnScreen(demo);
+		demo.setVisible(true);
 	}
 }
