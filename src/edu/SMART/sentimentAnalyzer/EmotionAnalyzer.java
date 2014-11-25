@@ -612,7 +612,7 @@ public class EmotionAnalyzer {
 				String input = "Tense standoff between obama and the senate isn't good";
 //				String input = "Tense standoff between obama and the senate isnt very good";
 //		String input = "tense standoff between obama and the senate is very good";
-		//		String input = "Too late now -everyone is there But not too late to boycott the closing ceremony Syria Ukraine Sochi2014";
+//				String input = "Too late now -everyone is there But not too late to boycott the closing ceremony Syria Ukraine Sochi2014";
 		System.out.println(obj.analysis(input));
 		PieChartDemo1 demo = new PieChartDemo1("Emotion Pie Chart",obj.analysis(input),input);
 		demo.pack();
